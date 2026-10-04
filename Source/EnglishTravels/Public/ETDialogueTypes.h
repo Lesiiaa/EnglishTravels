@@ -9,9 +9,11 @@ struct ENGLISHTRAVELS_API FDialogueChoice
 {
     GENERATED_BODY()
 
+    /** Answer text */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dialogue")
     FText ChoiceText;
 
+    /** Is it the correct answer */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dialogue")
     bool bIsCorrect = false;
 };
@@ -21,35 +23,31 @@ struct ENGLISHTRAVELS_API FDialogueLine : public FTableRowBase
 {
     GENERATED_BODY()
 
-    /** Unikalny identyfikator dialogu */
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dialogue")
-    FName Id;
-
-    /** Nazwa mówi¹cej postaci */
+    /** NPC name */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dialogue")
     FText SpeakerName;
 
-    /** Oryginalny tekst */
+    /** English text */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dialogue")
     FText OriginalText;
 
-    /** T³umaczenie ca³ego zdania */
+    /** Polish Translation */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dialogue")
     FText Translation;
 
-    /** Czy pokazaæ przycisk "Translation" */
+    /** Is Translation Avaiable? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dialogue")
     bool bShowTranslationButton = true;
 
-    /** Odpowiedzi (puste dla zwyk³ych dialogów) */
+    /** Answer choices, empty when no choices*/
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dialogue")
     TArray<FDialogueChoice> Choices;
 
-    /** Id nastêpnej linijki dialogu */
+    /** Next dialogue line, Row Name from DataTable */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dialogue")
     FName NextId;
 
-    /** Czy ta linia koñczy dialog */
+    /** This line ends dialogue? */
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dialogue")
     bool bEndsDialogue = false;
 };
