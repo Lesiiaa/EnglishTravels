@@ -23,6 +23,9 @@ public:
     int32 GetTotalWordsCount() const;
 
     UFUNCTION(BlueprintCallable, Category = "Vocabulary")
+    bool AreAllWordsLearned() const;
+
+    UFUNCTION(BlueprintCallable, Category = "Vocabulary")
     void SetTotalWordsCount(int32 NewTotalWordsCount);
 
 private:
@@ -30,5 +33,5 @@ private:
     TSet<FName> LearnedWords;
 
     UPROPERTY()
-    int32 TotalWordsCount = 8;
+    int32 TotalWordsCount = 3;
 };

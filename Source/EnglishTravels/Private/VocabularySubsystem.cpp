@@ -31,6 +31,11 @@ int32 UVocabularySubsystem::GetTotalWordsCount() const
     return TotalWordsCount;
 }
 
+bool UVocabularySubsystem::AreAllWordsLearned() const
+{
+    return TotalWordsCount > 0 && LearnedWords.Num() >= TotalWordsCount;
+}
+
 void UVocabularySubsystem::SetTotalWordsCount(int32 NewTotalWordsCount)
 {
     TotalWordsCount = FMath::Max(0, NewTotalWordsCount);
