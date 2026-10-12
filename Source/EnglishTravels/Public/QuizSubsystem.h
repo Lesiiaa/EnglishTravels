@@ -63,5 +63,5 @@ private:
     int32 MistakesCount = 0;
 
     UPROPERTY()
-    bool bCurrentQuestionAlreadyFailed = false;
+    bool bCurrentQuestionHadMistake = false;
 };

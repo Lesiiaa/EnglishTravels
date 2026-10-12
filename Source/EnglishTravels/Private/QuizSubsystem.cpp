@@ -31,7 +31,7 @@ void UQuizSubsystem::StartQuiz()
     CurrentQuestionIndex = 0;
     CorrectAnswersCount = 0;
     MistakesCount = 0;
-    bCurrentQuestionAlreadyFailed = false;
+    bCurrentQuestionHadMistake = false;
 }
 
 FQuizQuestion UQuizSubsystem::GetCurrentQuestion() const
@@ -55,17 +55,16 @@ EQuizAnswerResult UQuizSubsystem::SubmitAnswer(int32 SelectedAnswerIndex)
 
     if (SelectedAnswerIndex == CurrentQuestion.CorrectAnswerIndex)
     {
-        CorrectAnswersCount++;
+        if (!bCurrentQuestionHadMistake)
+        {
+            CorrectAnswersCount++;
+        }
+
         return EQuizAnswerResult::Correct;
     }
 
-    if (bCurrentQuestionAlreadyFailed)
-    {
-        return EQuizAnswerResult::AlreadyFailedThisQuestion;
-    }
-
     MistakesCount++;
-    bCurrentQuestionAlreadyFailed = true;
+    bCurrentQuestionHadMistake = true;
 
     return EQuizAnswerResult::Incorrect;
 }
@@ -73,7 +72,7 @@ EQuizAnswerResult UQuizSubsystem::SubmitAnswer(int32 SelectedAnswerIndex)
 bool UQuizSubsystem::MoveToNextQuestion()
 {
     CurrentQuestionIndex++;
-    bCurrentQuestionAlreadyFailed = false;
+    bCurrentQuestionHadMistake = false;
 
     return Questions.IsValidIndex(CurrentQuestionIndex);
 }
