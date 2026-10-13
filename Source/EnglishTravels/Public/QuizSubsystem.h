@@ -46,8 +46,17 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Quiz")
     int32 GetTotalQuestionsCount() const;
 
+    //max 1 mistake to pass
     UFUNCTION(BlueprintCallable, Category = "Quiz")
     bool IsQuizPassed() const;
+
+    //player finished quiz?
+    UFUNCTION(BlueprintCallable, Category = "Quiz")
+    bool HasCompletedQuiz() const;
+
+    //player passed quiz?
+    UFUNCTION(BlueprintCallable, Category = "Quiz")
+    bool HasPassedQuiz() const;
 
 private:
     UPROPERTY()
@@ -64,4 +73,7 @@ private:
 
     UPROPERTY()
     bool bCurrentQuestionHadMistake = false;
+
+    UPROPERTY()
+    bool bQuizCompleted = false;
 };

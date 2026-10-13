@@ -32,6 +32,7 @@ void UQuizSubsystem::StartQuiz()
     CorrectAnswersCount = 0;
     MistakesCount = 0;
     bCurrentQuestionHadMistake = false;
+    bQuizCompleted = false;
 }
 
 FQuizQuestion UQuizSubsystem::GetCurrentQuestion() const
@@ -74,7 +75,13 @@ bool UQuizSubsystem::MoveToNextQuestion()
     CurrentQuestionIndex++;
     bCurrentQuestionHadMistake = false;
 
-    return Questions.IsValidIndex(CurrentQuestionIndex);
+    if (!Questions.IsValidIndex(CurrentQuestionIndex))
+    {
+        bQuizCompleted = true;
+        return false;
+    }
+
+    return true;
 }
 
 bool UQuizSubsystem::IsQuizFinished() const
@@ -105,4 +112,14 @@ int32 UQuizSubsystem::GetTotalQuestionsCount() const
 bool UQuizSubsystem::IsQuizPassed() const
 {
     return MistakesCount <= 1;
+}
+
+bool UQuizSubsystem::HasCompletedQuiz() const
+{
+    return bQuizCompleted;
+}
+
+bool UQuizSubsystem::HasPassedQuiz() const
+{
+    return bQuizCompleted && IsQuizPassed();
 }
