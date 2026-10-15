@@ -3,7 +3,10 @@
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "QuizTypes.h"
+#include "WordTypes.h"
 #include "QuizSubsystem.generated.h"
+
+class UDataTable;
 
 UENUM(BlueprintType)
 enum class EQuizAnswerResult : uint8
@@ -46,17 +49,20 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Quiz")
     int32 GetTotalQuestionsCount() const;
 
-    //max 1 mistake to pass
+    // max 1 mistake to pass
     UFUNCTION(BlueprintCallable, Category = "Quiz")
     bool IsQuizPassed() const;
 
-    //player finished quiz?
+    // player finished quiz?
     UFUNCTION(BlueprintCallable, Category = "Quiz")
     bool HasCompletedQuiz() const;
 
-    //player passed quiz?
+    // player passed quiz?
     UFUNCTION(BlueprintCallable, Category = "Quiz")
     bool HasPassedQuiz() const;
+
+    UFUNCTION(BlueprintCallable, Category = "Quiz")
+    void SetWordTable(UDataTable* NewWordTable);
 
 private:
     UPROPERTY()
@@ -76,4 +82,7 @@ private:
 
     UPROPERTY()
     bool bQuizCompleted = false;
+
+    UPROPERTY()
+    UDataTable* WordTable = nullptr;
 };

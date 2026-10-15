@@ -1,32 +1,81 @@
 #include "QuizSubsystem.h"
+#include "Engine/DataTable.h"
 
 void UQuizSubsystem::StartQuiz()
 {
     Questions.Empty();
 
-    FQuizQuestion Question1;
-    Question1.QuestionText = FText::FromString(TEXT("What does \"water\" mean?"));
-    Question1.AnswerA = FText::FromString(TEXT("Woda"));
-    Question1.AnswerB = FText::FromString(TEXT("Chleb"));
-    Question1.AnswerC = FText::FromString(TEXT("Mleko"));
-    Question1.CorrectAnswerIndex = 0;
-    Questions.Add(Question1);
+    if (!WordTable)
+    {
+        CurrentQuestionIndex = 0;
+        CorrectAnswersCount = 0;
+        MistakesCount = 0;
+        bCurrentQuestionHadMistake = false;
+        bQuizCompleted = false;
+        return;
+    }
 
-    FQuizQuestion Question2;
-    Question2.QuestionText = FText::FromString(TEXT("What does \"bread\" mean?"));
-    Question2.AnswerA = FText::FromString(TEXT("Pomoc"));
-    Question2.AnswerB = FText::FromString(TEXT("Chleb"));
-    Question2.AnswerC = FText::FromString(TEXT("Gdzie?"));
-    Question2.CorrectAnswerIndex = 1;
-    Questions.Add(Question2);
+    TArray<FWordData> ShopWords;
 
-    FQuizQuestion Question3;
-    Question3.QuestionText = FText::FromString(TEXT("What does \"milk\" mean?"));
-    Question3.AnswerA = FText::FromString(TEXT("Dziekuje"));
-    Question3.AnswerB = FText::FromString(TEXT("Mleko"));
-    Question3.AnswerC = FText::FromString(TEXT("Prosze"));
-    Question3.CorrectAnswerIndex = 1;
-    Questions.Add(Question3);
+    const TArray<FName> RowNames = WordTable->GetRowNames();
+
+    for (const FName& RowName : RowNames)
+    {
+        const FWordData* Word = WordTable->FindRow<FWordData>(
+            RowName,
+            TEXT("StartQuiz")
+        );
+
+        if (Word && Word->SetId == FName("Shop"))
+        {
+            ShopWords.Add(*Word);
+        }
+    }
+
+    for (int32 i = 0; i < ShopWords.Num(); i++)
+    {
+        const FWordData& CurrentWord = ShopWords[i];
+
+        FQuizQuestion Question;
+
+        Question.QuestionText = FText::Format(
+            FText::FromString(TEXT("What does \"{0}\" mean?")),
+            CurrentWord.EnglishText
+        );
+
+        TArray<FText> Answers;
+
+        Answers.Add(CurrentWord.PolishText);
+        Answers.Add(ShopWords[(i + 1) % ShopWords.Num()].PolishText);
+        Answers.Add(ShopWords[(i + 2) % ShopWords.Num()].PolishText);
+
+        const FText CorrectAnswer = Answers[0];
+
+        for (int32 j = Answers.Num() - 1; j > 0; j--)
+        {
+            const int32 RandomIndex = FMath::RandRange(0, j);
+            Answers.Swap(j, RandomIndex);
+        }
+
+        Question.AnswerA = Answers[0];
+        Question.AnswerB = Answers[1];
+        Question.AnswerC = Answers[2];
+
+        if (Answers[0].EqualTo(CorrectAnswer))
+        {
+            Question.CorrectAnswerIndex = 0;
+        }
+        else if (Answers[1].EqualTo(CorrectAnswer))
+        {
+            Question.CorrectAnswerIndex = 1;
+        }
+        else
+        {
+            Question.CorrectAnswerIndex = 2;
+        }
+
+        Questions.Add(Question);
+    }
 
     CurrentQuestionIndex = 0;
     CorrectAnswersCount = 0;
@@ -122,4 +171,9 @@ bool UQuizSubsystem::HasCompletedQuiz() const
 bool UQuizSubsystem::HasPassedQuiz() const
 {
     return bQuizCompleted && IsQuizPassed();
+}
+
+void UQuizSubsystem::SetWordTable(UDataTable* NewWordTable)
+{
+    WordTable = NewWordTable;
 }

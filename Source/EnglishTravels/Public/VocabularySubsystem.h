@@ -2,7 +2,10 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
+#include "WordTypes.h"
 #include "VocabularySubsystem.generated.h"
+
+class UDataTable;
 
 UCLASS()
 class ENGLISHTRAVELS_API UVocabularySubsystem : public UGameInstanceSubsystem
@@ -28,10 +31,25 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Vocabulary")
     void SetTotalWordsCount(int32 NewTotalWordsCount);
 
+    UFUNCTION(BlueprintCallable, Category = "Vocabulary")
+    void SetWordTable(UDataTable* NewWordTable);
+
+    UFUNCTION(BlueprintCallable, Category = "Vocabulary")
+    FWordData GetWordById(FName WordId) const;
+
+    UFUNCTION(BlueprintCallable, Category = "Vocabulary")
+    TArray<FWordData> GetWordsBySet(FName SetId) const;
+
+    UFUNCTION(BlueprintCallable, Category = "Vocabulary")
+    TArray<FWordData> GetWordsByCategory(FName Category) const;
+
 private:
     UPROPERTY()
     TSet<FName> LearnedWords;
 
     UPROPERTY()
     int32 TotalWordsCount = 3;
+
+    UPROPERTY()
+    UDataTable* WordTable = nullptr;
 };
