@@ -29,3 +29,18 @@ struct ENGLISHTRAVELS_API FWordData : public FTableRowBase
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Word")
     TSoftObjectPtr<UTexture2D> Image;
 };
+
+USTRUCT(BlueprintType)
+struct ENGLISHTRAVELS_API FWordProgress
+{
+    GENERATED_BODY()
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Progress")
+    bool bDiscovered = false;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Progress")
+    int32 CorrectAnswers = 0;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Progress")
+    int32 Mistakes = 0;
+};

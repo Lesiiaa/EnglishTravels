@@ -43,6 +43,18 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Vocabulary")
     TArray<FWordData> GetWordsByCategory(FName Category) const;
 
+    UFUNCTION(BlueprintCallable, Category = "Vocabulary")
+    void MarkWordAsDiscovered(FName WordId);
+
+    UFUNCTION(BlueprintCallable, Category = "Vocabulary")
+    void RegisterCorrectAnswer(FName WordId);
+
+    UFUNCTION(BlueprintCallable, Category = "Vocabulary")
+    void RegisterMistake(FName WordId);
+
+    UFUNCTION(BlueprintCallable, Category = "Vocabulary")
+    FWordProgress GetWordProgress(FName WordId) const;
+
 private:
     UPROPERTY()
     TSet<FName> LearnedWords;
@@ -52,4 +64,7 @@ private:
 
     UPROPERTY()
     UDataTable* WordTable = nullptr;
+
+    UPROPERTY()
+    TMap<FName, FWordProgress> WordProgress;
 };

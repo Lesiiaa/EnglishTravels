@@ -22,4 +22,7 @@ struct ENGLISHTRAVELS_API FQuizQuestion
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Quiz")
     int32 CorrectAnswerIndex = 0;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Quiz")
+    FName WordId;
 };

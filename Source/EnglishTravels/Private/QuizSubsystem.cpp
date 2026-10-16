@@ -1,5 +1,6 @@
 #include "QuizSubsystem.h"
 #include "Engine/DataTable.h"
+#include "VocabularySubsystem.h"
 
 void UQuizSubsystem::StartQuiz()
 {
@@ -37,6 +38,8 @@ void UQuizSubsystem::StartQuiz()
         const FWordData& CurrentWord = ShopWords[i];
 
         FQuizQuestion Question;
+
+        Question.WordId = CurrentWord.WordId;
 
         Question.QuestionText = FText::Format(
             FText::FromString(TEXT("What does \"{0}\" mean?")),
@@ -103,11 +106,19 @@ EQuizAnswerResult UQuizSubsystem::SubmitAnswer(int32 SelectedAnswerIndex)
 
     const FQuizQuestion& CurrentQuestion = Questions[CurrentQuestionIndex];
 
+    UVocabularySubsystem* VocabularySubsystem =
+        GetGameInstance()->GetSubsystem<UVocabularySubsystem>();
+
     if (SelectedAnswerIndex == CurrentQuestion.CorrectAnswerIndex)
     {
         if (!bCurrentQuestionHadMistake)
         {
             CorrectAnswersCount++;
+
+            if (VocabularySubsystem)
+            {
+                VocabularySubsystem->RegisterCorrectAnswer(CurrentQuestion.WordId);
+            }
         }
 
         return EQuizAnswerResult::Correct;
@@ -115,6 +126,11 @@ EQuizAnswerResult UQuizSubsystem::SubmitAnswer(int32 SelectedAnswerIndex)
 
     MistakesCount++;
     bCurrentQuestionHadMistake = true;
+
+    if (VocabularySubsystem)
+    {
+        VocabularySubsystem->RegisterMistake(CurrentQuestion.WordId);
+    }
 
     return EQuizAnswerResult::Incorrect;
 }

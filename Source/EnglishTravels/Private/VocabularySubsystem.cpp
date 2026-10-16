@@ -120,3 +120,46 @@ TArray<FWordData> UVocabularySubsystem::GetWordsByCategory(FName Category) const
 
     return Result;
 }
+
+void UVocabularySubsystem::MarkWordAsDiscovered(FName WordId)
+{
+    if (WordId.IsNone())
+    {
+        return;
+    }
+
+    FWordProgress& Progress = WordProgress.FindOrAdd(WordId);
+    Progress.bDiscovered = true;
+}
+
+void UVocabularySubsystem::RegisterCorrectAnswer(FName WordId)
+{
+    if (WordId.IsNone())
+    {
+        return;
+    }
+
+    FWordProgress& Progress = WordProgress.FindOrAdd(WordId);
+    Progress.CorrectAnswers++;
+}
+
+void UVocabularySubsystem::RegisterMistake(FName WordId)
+{
+    if (WordId.IsNone())
+    {
+        return;
+    }
+
+    FWordProgress& Progress = WordProgress.FindOrAdd(WordId);
+    Progress.Mistakes++;
+}
+
+FWordProgress UVocabularySubsystem::GetWordProgress(FName WordId) const
+{
+    if (const FWordProgress* Progress = WordProgress.Find(WordId))
+    {
+        return *Progress;
+    }
+
+    return FWordProgress();
+}
