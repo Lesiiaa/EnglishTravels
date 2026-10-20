@@ -30,6 +30,16 @@ struct ENGLISHTRAVELS_API FWordData : public FTableRowBase
     TSoftObjectPtr<UTexture2D> Image;
 };
 
+UENUM(BlueprintType)
+enum class EWordKnowledgeLevel : uint8
+{
+    Unknown UMETA(DisplayName = "Nieznane"),
+    Weak UMETA(DisplayName = "Slabo znane"),
+    Known UMETA(DisplayName = "Znane"),
+    WellKnown UMETA(DisplayName = "Dobrze znane"),
+    Mastered UMETA(DisplayName = "Mastered")
+};
+
 USTRUCT(BlueprintType)
 struct ENGLISHTRAVELS_API FWordProgress
 {
@@ -37,6 +47,9 @@ struct ENGLISHTRAVELS_API FWordProgress
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Progress")
     bool bDiscovered = false;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Progress")
+    int32 KnowledgeScore = 0;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Progress")
     int32 CorrectAnswers = 0;

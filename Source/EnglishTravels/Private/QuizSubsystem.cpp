@@ -111,14 +111,23 @@ EQuizAnswerResult UQuizSubsystem::SubmitAnswer(int32 SelectedAnswerIndex)
 
     if (SelectedAnswerIndex == CurrentQuestion.CorrectAnswerIndex)
     {
+        if (VocabularySubsystem)
+        {
+            VocabularySubsystem->RegisterCorrectAnswer(CurrentQuestion.WordId);
+
+            if (!bCurrentQuestionHadMistake)
+            {
+                VocabularySubsystem->AddKnowledgeScore(CurrentQuestion.WordId, 2);
+            }
+            else
+            {
+                VocabularySubsystem->AddKnowledgeScore(CurrentQuestion.WordId, 1);
+            }
+        }
+
         if (!bCurrentQuestionHadMistake)
         {
             CorrectAnswersCount++;
-
-            if (VocabularySubsystem)
-            {
-                VocabularySubsystem->RegisterCorrectAnswer(CurrentQuestion.WordId);
-            }
         }
 
         return EQuizAnswerResult::Correct;
@@ -130,6 +139,7 @@ EQuizAnswerResult UQuizSubsystem::SubmitAnswer(int32 SelectedAnswerIndex)
     if (VocabularySubsystem)
     {
         VocabularySubsystem->RegisterMistake(CurrentQuestion.WordId);
+        VocabularySubsystem->AddKnowledgeScore(CurrentQuestion.WordId, -1);
     }
 
     return EQuizAnswerResult::Incorrect;

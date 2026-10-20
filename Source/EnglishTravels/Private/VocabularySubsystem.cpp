@@ -163,3 +163,65 @@ FWordProgress UVocabularySubsystem::GetWordProgress(FName WordId) const
 
     return FWordProgress();
 }
+
+void UVocabularySubsystem::AddKnowledgeScore(FName WordId, int32 Amount)
+{
+    if (WordId.IsNone())
+    {
+        return;
+    }
+
+    FWordProgress& Progress = WordProgress.FindOrAdd(WordId);
+
+    Progress.KnowledgeScore = FMath::Clamp(
+        Progress.KnowledgeScore + Amount,
+        0,
+        12
+    );
+}
+
+EWordKnowledgeLevel UVocabularySubsystem::GetKnowledgeLevel(FName WordId) const
+{
+    const FWordProgress* Progress = WordProgress.Find(WordId);
+
+    if (!Progress)
+    {
+        return EWordKnowledgeLevel::Unknown;
+    }
+
+    const int32 Score = Progress->KnowledgeScore;
+
+    if (Score <= 0)
+    {
+        return EWordKnowledgeLevel::Unknown;
+    }
+
+    if (Score <= 3)
+    {
+        return EWordKnowledgeLevel::Weak;
+    }
+
+    if (Score <= 6)
+    {
+        return EWordKnowledgeLevel::Known;
+    }
+
+    if (Score <= 9)
+    {
+        return EWordKnowledgeLevel::WellKnown;
+    }
+
+    return EWordKnowledgeLevel::Mastered;
+}
+
+float UVocabularySubsystem::GetKnowledgePercent(FName WordId) const
+{
+    const FWordProgress* Progress = WordProgress.Find(WordId);
+
+    if (!Progress)
+    {
+        return 0.0f;
+    }
+
+    return static_cast<float>(Progress->KnowledgeScore) / 12.0f;
+}

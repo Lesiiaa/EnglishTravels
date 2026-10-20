@@ -55,6 +55,15 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Vocabulary")
     FWordProgress GetWordProgress(FName WordId) const;
 
+    UFUNCTION(BlueprintCallable, Category = "Vocabulary")
+    void AddKnowledgeScore(FName WordId, int32 Amount);
+
+    UFUNCTION(BlueprintCallable, Category = "Vocabulary")
+    EWordKnowledgeLevel GetKnowledgeLevel(FName WordId) const;
+
+    UFUNCTION(BlueprintCallable, Category = "Vocabulary")
+    float GetKnowledgePercent(FName WordId) const;
+
 private:
     UPROPERTY()
     TSet<FName> LearnedWords;
