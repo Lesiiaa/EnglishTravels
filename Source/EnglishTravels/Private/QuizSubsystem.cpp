@@ -117,10 +117,6 @@ EQuizAnswerResult UQuizSubsystem::SubmitAnswer(int32 SelectedAnswerIndex)
 
             if (!bCurrentQuestionHadMistake)
             {
-                VocabularySubsystem->AddKnowledgeScore(CurrentQuestion.WordId, 2);
-            }
-            else
-            {
                 VocabularySubsystem->AddKnowledgeScore(CurrentQuestion.WordId, 1);
             }
         }
