@@ -121,6 +121,46 @@ TArray<FWordData> UVocabularySubsystem::GetWordsByCategory(FName Category) const
     return Result;
 }
 
+TArray<FName> UVocabularySubsystem::GetDiscoveredCategories() const
+{
+    TArray<FName> Result;
+
+    if (!WordTable)
+    {
+        return Result;
+    }
+
+    TSet<FName> UniqueCategories;
+
+    for (const FName& RowName : WordTable->GetRowNames())
+    {
+        const FWordData* Word = WordTable->FindRow<FWordData>(
+            RowName, TEXT("GetDiscoveredCategories"));
+
+        if (!Word || Word->WordId.IsNone() || Word->EnglishText.IsEmpty() ||
+            Word->PolishText.IsEmpty() || !GetWordProgress(Word->WordId).bDiscovered)
+        {
+            continue;
+        }
+
+        for (const FName& Category : Word->Categories)
+        {
+            if (!Category.IsNone())
+            {
+                UniqueCategories.Add(Category);
+            }
+        }
+    }
+
+    Result = UniqueCategories.Array();
+    Result.Sort([](const FName& FirstCategory, const FName& SecondCategory)
+    {
+        return FirstCategory.LexicalLess(SecondCategory);
+    });
+
+    return Result;
+}
+
 void UVocabularySubsystem::MarkWordAsDiscovered(FName WordId)
 {
     if (WordId.IsNone())
