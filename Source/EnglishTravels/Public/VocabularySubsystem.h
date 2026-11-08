@@ -46,6 +46,9 @@ public:
     UFUNCTION(BlueprintPure, Category = "Vocabulary")
     TArray<FName> GetDiscoveredCategories() const;
 
+    UFUNCTION(BlueprintPure, Category = "Vocabulary")
+    TArray<FWordData> GetDiscoveredWords() const;
+
     UFUNCTION(BlueprintCallable, Category = "Vocabulary")
     void MarkWordAsDiscovered(FName WordId);
 

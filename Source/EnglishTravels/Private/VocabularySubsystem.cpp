@@ -161,6 +161,29 @@ TArray<FName> UVocabularySubsystem::GetDiscoveredCategories() const
     return Result;
 }
 
+TArray<FWordData> UVocabularySubsystem::GetDiscoveredWords() const
+{
+    TArray<FWordData> Result;
+
+    if (!WordTable)
+    {
+        return Result;
+    }
+
+    for (const FName& RowName : WordTable->GetRowNames())
+    {
+        const FWordData* Word = WordTable->FindRow<FWordData>(
+            RowName, TEXT("GetDiscoveredWords"));
+
+        if (Word && !Word->WordId.IsNone() && GetWordProgress(Word->WordId).bDiscovered)
+        {
+            Result.Add(*Word);
+        }
+    }
+
+    return Result;
+}
+
 void UVocabularySubsystem::MarkWordAsDiscovered(FName WordId)
 {
     if (WordId.IsNone())

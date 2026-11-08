@@ -17,7 +17,9 @@ bool UFlashcardSubsystem::StartSessionByCategory(FName Category)
         GetGameInstance()->GetSubsystem<UVocabularySubsystem>();
 
     return StartSessionFromWords(VocabularySubsystem
-        ? VocabularySubsystem->GetWordsByCategory(Category) : TArray<FWordData>());
+        ? (Category.IsNone() ? VocabularySubsystem->GetDiscoveredWords()
+            : VocabularySubsystem->GetWordsByCategory(Category))
+        : TArray<FWordData>());
 }
 
 bool UFlashcardSubsystem::StartSessionFromWords(const TArray<FWordData>& Words)

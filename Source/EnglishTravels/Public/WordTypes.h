@@ -6,6 +6,14 @@
 
 class UTexture2D;
 
+UENUM(BlueprintType)
+enum class EStudyActivity : uint8
+{
+    Flashcards UMETA(DisplayName = "Flashcards"),
+    Quiz UMETA(DisplayName = "Quiz"),
+    Memory UMETA(DisplayName = "Memory")
+};
+
 USTRUCT(BlueprintType)
 struct ENGLISHTRAVELS_API FWordData : public FTableRowBase
 {

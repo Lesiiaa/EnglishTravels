@@ -29,6 +29,12 @@ public:
     bool StartTrainingQuiz(FName SetId);
 
     UFUNCTION(BlueprintCallable, Category = "Quiz")
+    bool StartTrainingQuizAllWords();
+
+    UFUNCTION(BlueprintCallable, Category = "Quiz")
+    bool StartTrainingQuizByCategory(FName Category);
+
+    UFUNCTION(BlueprintCallable, Category = "Quiz")
     FQuizQuestion GetCurrentQuestion() const;
 
     UFUNCTION(BlueprintCallable, Category = "Quiz")
@@ -68,7 +74,7 @@ public:
     void SetWordTable(UDataTable* NewWordTable);
 
 private:
-    bool BuildQuiz(FName SetId, bool bOnlyDiscovered);
+    bool BuildQuiz(FName SetId, bool bOnlyDiscovered, FName Category = NAME_None);
 
     UPROPERTY()
     TArray<FQuizQuestion> Questions;

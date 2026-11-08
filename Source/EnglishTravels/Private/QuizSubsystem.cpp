@@ -14,7 +14,17 @@ bool UQuizSubsystem::StartTrainingQuiz(FName SetId)
     return BuildQuiz(SetId, true);
 }
 
-bool UQuizSubsystem::BuildQuiz(FName SetId, bool bOnlyDiscovered)
+bool UQuizSubsystem::StartTrainingQuizAllWords()
+{
+    return BuildQuiz(NAME_None, true);
+}
+
+bool UQuizSubsystem::StartTrainingQuizByCategory(FName Category)
+{
+    return BuildQuiz(NAME_None, true, Category);
+}
+
+bool UQuizSubsystem::BuildQuiz(FName SetId, bool bOnlyDiscovered, FName Category)
 {
     Questions.Empty();
     CurrentQuestionIndex = 0;
@@ -23,7 +33,7 @@ bool UQuizSubsystem::BuildQuiz(FName SetId, bool bOnlyDiscovered)
     bCurrentQuestionHadMistake = false;
     bTrainingMode = bOnlyDiscovered;
 
-    if (!WordTable || SetId.IsNone())
+    if (!WordTable || (SetId.IsNone() && !bOnlyDiscovered))
     {
         return false;
     }
@@ -46,8 +56,13 @@ bool UQuizSubsystem::BuildQuiz(FName SetId, bool bOnlyDiscovered)
             TEXT("StartQuiz")
         );
 
-        if (Word && Word->SetId == SetId)
+        if (Word && (Word->SetId == SetId || (bOnlyDiscovered && SetId.IsNone())))
         {
+            if (!Category.IsNone() && !Word->Categories.Contains(Category))
+            {
+                continue;
+            }
+
             if (bOnlyDiscovered)
             {
                 if (Word->WordId.IsNone() || Word->EnglishText.IsEmpty() ||
