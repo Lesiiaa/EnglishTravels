@@ -26,6 +26,9 @@ public:
     void StartQuiz();
 
     UFUNCTION(BlueprintCallable, Category = "Quiz")
+    bool StartTrainingQuiz(FName SetId);
+
+    UFUNCTION(BlueprintCallable, Category = "Quiz")
     FQuizQuestion GetCurrentQuestion() const;
 
     UFUNCTION(BlueprintCallable, Category = "Quiz")
@@ -65,6 +68,8 @@ public:
     void SetWordTable(UDataTable* NewWordTable);
 
 private:
+    bool BuildQuiz(FName SetId, bool bOnlyDiscovered);
+
     UPROPERTY()
     TArray<FQuizQuestion> Questions;
 
@@ -82,6 +87,12 @@ private:
 
     UPROPERTY()
     bool bQuizCompleted = false;
+
+    UPROPERTY()
+    bool bStoryQuizPassed = false;
+
+    UPROPERTY()
+    bool bTrainingMode = false;
 
     UPROPERTY()
     UDataTable* WordTable = nullptr;

@@ -4,19 +4,38 @@
 
 void UQuizSubsystem::StartQuiz()
 {
-    Questions.Empty();
+    bQuizCompleted = false;
+    bStoryQuizPassed = false;
+    BuildQuiz(FName("Shop"), false);
+}
 
-    if (!WordTable)
+bool UQuizSubsystem::StartTrainingQuiz(FName SetId)
+{
+    return BuildQuiz(SetId, true);
+}
+
+bool UQuizSubsystem::BuildQuiz(FName SetId, bool bOnlyDiscovered)
+{
+    Questions.Empty();
+    CurrentQuestionIndex = 0;
+    CorrectAnswersCount = 0;
+    MistakesCount = 0;
+    bCurrentQuestionHadMistake = false;
+    bTrainingMode = bOnlyDiscovered;
+
+    if (!WordTable || SetId.IsNone())
     {
-        CurrentQuestionIndex = 0;
-        CorrectAnswersCount = 0;
-        MistakesCount = 0;
-        bCurrentQuestionHadMistake = false;
-        bQuizCompleted = false;
-        return;
+        return false;
     }
 
     TArray<FWordData> ShopWords;
+    UVocabularySubsystem* VocabularySubsystem =
+        GetGameInstance()->GetSubsystem<UVocabularySubsystem>();
+
+    if (bOnlyDiscovered && !VocabularySubsystem)
+    {
+        return false;
+    }
 
     const TArray<FName> RowNames = WordTable->GetRowNames();
 
@@ -27,10 +46,37 @@ void UQuizSubsystem::StartQuiz()
             TEXT("StartQuiz")
         );
 
-        if (Word && Word->SetId == FName("Shop"))
+        if (Word && Word->SetId == SetId)
         {
+            if (bOnlyDiscovered)
+            {
+                if (Word->WordId.IsNone() || Word->EnglishText.IsEmpty() ||
+                    Word->PolishText.IsEmpty() ||
+                    !VocabularySubsystem->GetWordProgress(Word->WordId).bDiscovered)
+                {
+                    continue;
+                }
+
+                const bool bDuplicateAnswer = ShopWords.ContainsByPredicate(
+                    [Word](const FWordData& ExistingWord)
+                    {
+                        return ExistingWord.WordId == Word->WordId ||
+                            ExistingWord.PolishText.EqualTo(Word->PolishText);
+                    });
+
+                if (bDuplicateAnswer)
+                {
+                    continue;
+                }
+            }
+
             ShopWords.Add(*Word);
         }
+    }
+
+    if (bOnlyDiscovered && ShopWords.Num() < 3)
+    {
+        return false;
     }
 
     for (int32 i = 0; i < ShopWords.Num(); i++)
@@ -80,11 +126,7 @@ void UQuizSubsystem::StartQuiz()
         Questions.Add(Question);
     }
 
-    CurrentQuestionIndex = 0;
-    CorrectAnswersCount = 0;
-    MistakesCount = 0;
-    bCurrentQuestionHadMistake = false;
-    bQuizCompleted = false;
+    return !Questions.IsEmpty();
 }
 
 FQuizQuestion UQuizSubsystem::GetCurrentQuestion() const
@@ -143,12 +185,21 @@ EQuizAnswerResult UQuizSubsystem::SubmitAnswer(int32 SelectedAnswerIndex)
 
 bool UQuizSubsystem::MoveToNextQuestion()
 {
+    if (!Questions.IsValidIndex(CurrentQuestionIndex))
+    {
+        return false;
+    }
+
     CurrentQuestionIndex++;
     bCurrentQuestionHadMistake = false;
 
     if (!Questions.IsValidIndex(CurrentQuestionIndex))
     {
-        bQuizCompleted = true;
+        if (!bTrainingMode)
+        {
+            bQuizCompleted = true;
+            bStoryQuizPassed = IsQuizPassed();
+        }
         return false;
     }
 
@@ -192,7 +243,7 @@ bool UQuizSubsystem::HasCompletedQuiz() const
 
 bool UQuizSubsystem::HasPassedQuiz() const
 {
-    return bQuizCompleted && IsQuizPassed();
+    return bQuizCompleted && bStoryQuizPassed;
 }
 
 void UQuizSubsystem::SetWordTable(UDataTable* NewWordTable)
