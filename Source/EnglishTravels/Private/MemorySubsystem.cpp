@@ -60,7 +60,7 @@ bool UMemorySubsystem::StartSessionFromWords(const TArray<FWordData>& Words, int
         EligibleWords.Swap(ShuffleIndex, FMath::RandRange(0, ShuffleIndex));
     }
 
-    const int32 PairCount = FMath::Min(EligibleWords.Num(), FMath::Clamp(MaxPairs, 2, 6));
+    const int32 PairCount = FMath::Min(EligibleWords.Num(), FMath::Clamp(MaxPairs, 2, 10));
     Cards.Reserve(PairCount * 2);
 
     for (int32 WordIndex = 0; WordIndex < PairCount; WordIndex++)
@@ -175,4 +175,36 @@ int32 UMemorySubsystem::GetMatchedPairsCount() const
 int32 UMemorySubsystem::GetTotalPairsCount() const
 {
     return Cards.Num() / 2;
+}
+
+int32 UMemorySubsystem::GetBoardColumns() const
+{
+    const int32 PairCount = GetTotalPairsCount();
+
+    if (PairCount <= 2)
+    {
+        return 2;
+    }
+
+    if (PairCount == 3)
+    {
+        return 3;
+    }
+
+    return PairCount <= 6 ? 4 : 5;
+}
+
+FVector2D UMemorySubsystem::GetCardSize() const
+{
+    switch (GetBoardColumns())
+    {
+    case 2:
+        return FVector2D(180.0f, 180.0f);
+    case 3:
+        return FVector2D(160.0f, 160.0f);
+    case 4:
+        return FVector2D(140.0f, 140.0f);
+    default:
+        return FVector2D(110.0f, 100.0f);
+    }
 }

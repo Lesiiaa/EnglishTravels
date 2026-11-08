@@ -13,10 +13,10 @@ class ENGLISHTRAVELS_API UMemorySubsystem : public UGameInstanceSubsystem
 
 public:
     UFUNCTION(BlueprintCallable, Category = "Memory")
-    bool StartSession(int32 MaxPairs = 6);
+    bool StartSession(int32 MaxPairs = 10);
 
     UFUNCTION(BlueprintCallable, Category = "Memory")
-    bool StartSessionByCategory(FName Category, int32 MaxPairs = 6);
+    bool StartSessionByCategory(FName Category, int32 MaxPairs = 10);
 
     UFUNCTION(BlueprintCallable, Category = "Memory")
     EMemorySelectionResult SelectCard(int32 CardIndex);
@@ -44,6 +44,12 @@ public:
 
     UFUNCTION(BlueprintPure, Category = "Memory")
     int32 GetTotalPairsCount() const;
+
+    UFUNCTION(BlueprintPure, Category = "Memory|Layout")
+    int32 GetBoardColumns() const;
+
+    UFUNCTION(BlueprintPure, Category = "Memory|Layout")
+    FVector2D GetCardSize() const;
 
 private:
     bool StartSessionFromWords(const TArray<FWordData>& Words, int32 MaxPairs);

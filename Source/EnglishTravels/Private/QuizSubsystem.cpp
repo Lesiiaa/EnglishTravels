@@ -94,9 +94,19 @@ bool UQuizSubsystem::BuildQuiz(FName SetId, bool bOnlyDiscovered, FName Category
         return false;
     }
 
-    for (int32 i = 0; i < ShopWords.Num(); i++)
+    if (bOnlyDiscovered)
     {
-        const FWordData& CurrentWord = ShopWords[i];
+        for (int32 ShuffleIndex = ShopWords.Num() - 1; ShuffleIndex > 0; ShuffleIndex--)
+        {
+            ShopWords.Swap(ShuffleIndex, FMath::RandRange(0, ShuffleIndex));
+        }
+    }
+
+    const int32 QuestionCount = bOnlyDiscovered ? FMath::Min(ShopWords.Num(), 10) : ShopWords.Num();
+
+    for (int32 WordIndex = 0; WordIndex < QuestionCount; WordIndex++)
+    {
+        const FWordData& CurrentWord = ShopWords[WordIndex];
 
         FQuizQuestion Question;
 
@@ -110,8 +120,8 @@ bool UQuizSubsystem::BuildQuiz(FName SetId, bool bOnlyDiscovered, FName Category
         TArray<FText> Answers;
 
         Answers.Add(CurrentWord.PolishText);
-        Answers.Add(ShopWords[(i + 1) % ShopWords.Num()].PolishText);
-        Answers.Add(ShopWords[(i + 2) % ShopWords.Num()].PolishText);
+        Answers.Add(ShopWords[(WordIndex + 1) % ShopWords.Num()].PolishText);
+        Answers.Add(ShopWords[(WordIndex + 2) % ShopWords.Num()].PolishText);
 
         const FText CorrectAnswer = Answers[0];
 
