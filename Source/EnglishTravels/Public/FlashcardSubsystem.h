@@ -17,6 +17,15 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Flashcards")
     bool StartSessionByCategory(FName Category);
 
+    UFUNCTION(BlueprintCallable, Category = "Flashcards|Review")
+    bool StartSmartReview(int32 MaxCards = 10);
+
+    UFUNCTION(BlueprintPure, Category = "Flashcards|Review")
+    bool IsSmartReviewSession() const;
+
+    UFUNCTION(BlueprintCallable, Category = "Flashcards")
+    void EndSession();
+
     UFUNCTION(BlueprintPure, Category = "Flashcards")
     FWordData GetCurrentCard() const;
 
@@ -54,4 +63,5 @@ private:
     int32 RememberedCount = 0;
     int32 ForgottenCount = 0;
     bool bCurrentCardRevealed = false;
+    bool bSmartReviewSession = false;
 };

@@ -53,15 +53,33 @@ struct ENGLISHTRAVELS_API FWordProgress
 {
     GENERATED_BODY()
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Progress")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "Progress")
     bool bDiscovered = false;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Progress")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "Progress")
     int32 KnowledgeScore = 0;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Progress")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "Progress")
     int32 CorrectAnswers = 0;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Progress")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "Progress")
     int32 Mistakes = 0;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "Review")
+    FDateTime FirstDiscoveredUtc;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "Review")
+    FDateTime LastReviewUtc;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "Review")
+    FDateTime NextReviewUtc;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "Review")
+    int32 ReviewStreak = 0;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "Review")
+    int32 ReviewCount = 0;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "Review")
+    int32 ForgottenReviews = 0;
 };

@@ -37,6 +37,7 @@ bool UMemorySubsystem::StartSessionFromWords(const TArray<FWordData>& Words, int
     TArray<FWordData> EligibleWords;
     TSet<FName> AddedWordIds;
 
+    //build pairs only from discovered words with an image
     for (const FWordData& Word : Words)
     {
         if (Word.WordId.IsNone() || Word.EnglishText.IsEmpty() || Word.Image.IsNull() ||
@@ -108,6 +109,7 @@ EMemorySelectionResult UMemorySubsystem::SelectCard(int32 CardIndex)
     FMemoryCard& FirstCard = Cards[FirstCardIndex];
     FMemoryCard& SecondCard = Cards[SecondCardIndex];
 
+    //match the word and image belonging to the same vocabulary entry
     if (FirstCard.WordId == SecondCard.WordId && FirstCard.CardType != SecondCard.CardType)
     {
         FirstCard.bMatched = true;
@@ -130,6 +132,7 @@ bool UMemorySubsystem::ResolveMismatch()
         return false;
     }
 
+    //hide the incorrect pair after the feedback delay handled by the widget
     Cards[FirstCardIndex].bRevealed = false;
     Cards[SecondCardIndex].bRevealed = false;
     FirstCardIndex = INDEX_NONE;

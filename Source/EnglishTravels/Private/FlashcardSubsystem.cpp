@@ -24,11 +24,7 @@ bool UFlashcardSubsystem::StartSessionByCategory(FName Category)
 
 bool UFlashcardSubsystem::StartSessionFromWords(const TArray<FWordData>& Words)
 {
-    Cards.Empty();
-    CurrentCardIndex = 0;
-    RememberedCount = 0;
-    ForgottenCount = 0;
-    bCurrentCardRevealed = false;
+    EndSession();
 
     UVocabularySubsystem* VocabularySubsystem =
         GetGameInstance()->GetSubsystem<UVocabularySubsystem>();
@@ -54,6 +50,32 @@ bool UFlashcardSubsystem::StartSessionFromWords(const TArray<FWordData>& Words)
     }
 
     return !Cards.IsEmpty();
+}
+
+bool UFlashcardSubsystem::StartSmartReview(int32 MaxCards)
+{
+    UVocabularySubsystem* VocabularySubsystem =
+        GetGameInstance()->GetSubsystem<UVocabularySubsystem>();
+    const TArray<FWordData> DueWords = VocabularySubsystem
+        ? VocabularySubsystem->GetDueReviewWords(FMath::Max(1, MaxCards)) : TArray<FWordData>();
+    const bool bStarted = StartSessionFromWords(DueWords);
+    bSmartReviewSession = bStarted;
+    return bStarted;
+}
+
+bool UFlashcardSubsystem::IsSmartReviewSession() const
+{
+    return bSmartReviewSession;
+}
+
+void UFlashcardSubsystem::EndSession()
+{
+    Cards.Empty();
+    CurrentCardIndex = 0;
+    RememberedCount = 0;
+    ForgottenCount = 0;
+    bCurrentCardRevealed = false;
+    bSmartReviewSession = false;
 }
 
 FWordData UFlashcardSubsystem::GetCurrentCard() const
@@ -89,17 +111,23 @@ bool UFlashcardSubsystem::SubmitAnswer(bool bRemembered)
 
     const FName WordId = Cards[CurrentCardIndex].WordId;
 
+    //only smart review changes the next review date
+    const bool bRecorded = bSmartReviewSession
+        ? VocabularySubsystem->RegisterReviewResult(WordId, bRemembered)
+        : VocabularySubsystem->RecordPracticeAnswer(WordId, bRemembered, bRemembered ? 1 : -1);
+
+    if (!bRecorded)
+    {
+        return false;
+    }
+
     if (bRemembered)
     {
         RememberedCount++;
-        VocabularySubsystem->RegisterCorrectAnswer(WordId);
-        VocabularySubsystem->AddKnowledgeScore(WordId, 1);
     }
     else
     {
         ForgottenCount++;
-        VocabularySubsystem->RegisterMistake(WordId);
-        VocabularySubsystem->AddKnowledgeScore(WordId, -1);
     }
 
     CurrentCardIndex++;
