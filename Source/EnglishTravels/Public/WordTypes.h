@@ -6,6 +6,14 @@
 
 class UTexture2D;
 
+UENUM(BlueprintType)
+enum class EStudyActivity : uint8
+{
+    Flashcards UMETA(DisplayName = "Flashcards"),
+    Quiz UMETA(DisplayName = "Quiz"),
+    Memory UMETA(DisplayName = "Memory")
+};
+
 USTRUCT(BlueprintType)
 struct ENGLISHTRAVELS_API FWordData : public FTableRowBase
 {
@@ -30,17 +38,48 @@ struct ENGLISHTRAVELS_API FWordData : public FTableRowBase
     TSoftObjectPtr<UTexture2D> Image;
 };
 
+UENUM(BlueprintType)
+enum class EWordKnowledgeLevel : uint8
+{
+    Unknown UMETA(DisplayName = "Nieznane"),
+    Weak UMETA(DisplayName = "Slabo znane"),
+    Known UMETA(DisplayName = "Znane"),
+    WellKnown UMETA(DisplayName = "Dobrze znane"),
+    Mastered UMETA(DisplayName = "Mastered")
+};
+
 USTRUCT(BlueprintType)
 struct ENGLISHTRAVELS_API FWordProgress
 {
     GENERATED_BODY()
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Progress")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "Progress")
     bool bDiscovered = false;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Progress")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "Progress")
+    int32 KnowledgeScore = 0;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "Progress")
     int32 CorrectAnswers = 0;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Progress")
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "Progress")
     int32 Mistakes = 0;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "Review")
+    FDateTime FirstDiscoveredUtc;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "Review")
+    FDateTime LastReviewUtc;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "Review")
+    FDateTime NextReviewUtc;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "Review")
+    int32 ReviewStreak = 0;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "Review")
+    int32 ReviewCount = 0;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, SaveGame, Category = "Review")
+    int32 ForgottenReviews = 0;
 };

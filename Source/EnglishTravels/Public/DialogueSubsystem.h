@@ -12,9 +12,6 @@ class ENGLISHTRAVELS_API UDialogueSubsystem : public UGameInstanceSubsystem
     GENERATED_BODY()
 
 public:
-    virtual void Initialize(FSubsystemCollectionBase& Collection) override;
-    virtual void Deinitialize() override;
-
     UFUNCTION(BlueprintCallable, Category = "Dialogue")
     void SetDialogueTable(UDataTable* InDialogueTable);
 
@@ -29,6 +26,9 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue")
     bool IsDialogueActive() const;
+
+    UFUNCTION(BlueprintCallable, Category = "Dialogue")
+    void EndDialogue();
 
 private:
     UPROPERTY()

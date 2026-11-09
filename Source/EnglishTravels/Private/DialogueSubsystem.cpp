@@ -1,13 +1,9 @@
 #include "DialogueSubsystem.h"
 
-void UDialogueSubsystem::Initialize(FSubsystemCollectionBase& Collection)
+void UDialogueSubsystem::EndDialogue()
 {
-    Super::Initialize(Collection);
-}
-
-void UDialogueSubsystem::Deinitialize()
-{
-    Super::Deinitialize();
+    bDialogueActive = false;
+    CurrentRowName = NAME_None;
 }
 
 void UDialogueSubsystem::SetDialogueTable(UDataTable* InDialogueTable)
@@ -34,9 +30,6 @@ bool UDialogueSubsystem::StartDialogue(FName StartRowName)
     CurrentRowName = StartRowName;
     bDialogueActive = true;
 
-    UE_LOG(LogTemp, Warning, TEXT("Dialogue started: %s"), *CurrentRowName.ToString());
-    UE_LOG(LogTemp, Warning, TEXT("Text: %s"), *FoundLine->OriginalText.ToString());
-
     return true;
 }
 
@@ -58,7 +51,6 @@ bool UDialogueSubsystem::NextLine()
     if (CurrentLine->bEndsDialogue || CurrentLine->NextId.IsNone())
     {
         bDialogueActive = false;
-        UE_LOG(LogTemp, Warning, TEXT("Dialogue ended."));
         return false;
     }
 
@@ -72,9 +64,6 @@ bool UDialogueSubsystem::NextLine()
     }
 
     CurrentRowName = CurrentLine->NextId;
-
-    UE_LOG(LogTemp, Warning, TEXT("Next dialogue line: %s"), *CurrentRowName.ToString());
-    UE_LOG(LogTemp, Warning, TEXT("Text: %s"), *NextDialogueLine->OriginalText.ToString());
 
     return true;
 }

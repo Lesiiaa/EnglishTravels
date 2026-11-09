@@ -43,6 +43,12 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Vocabulary")
     TArray<FWordData> GetWordsByCategory(FName Category) const;
 
+    UFUNCTION(BlueprintPure, Category = "Vocabulary")
+    TArray<FName> GetDiscoveredCategories() const;
+
+    UFUNCTION(BlueprintPure, Category = "Vocabulary")
+    TArray<FWordData> GetDiscoveredWords() const;
+
     UFUNCTION(BlueprintCallable, Category = "Vocabulary")
     void MarkWordAsDiscovered(FName WordId);
 
@@ -55,9 +61,38 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Vocabulary")
     FWordProgress GetWordProgress(FName WordId) const;
 
+    UFUNCTION(BlueprintCallable, Category = "Vocabulary")
+    void AddKnowledgeScore(FName WordId, int32 Amount);
+
+    UFUNCTION(BlueprintCallable, Category = "Vocabulary")
+    EWordKnowledgeLevel GetKnowledgeLevel(FName WordId) const;
+
+    UFUNCTION(BlueprintCallable, Category = "Vocabulary")
+    float GetKnowledgePercent(FName WordId) const;
+
+    UFUNCTION(BlueprintCallable, Category = "Vocabulary")
+    bool RecordPracticeAnswer(FName WordId, bool bCorrect, int32 ScoreChange);
+
+    UFUNCTION(BlueprintPure, Category = "Review")
+    TArray<FWordData> GetDueReviewWords(int32 MaxWords = 0) const;
+
+    UFUNCTION(BlueprintPure, Category = "Review")
+    int32 GetDueReviewCount() const;
+
+    UFUNCTION(BlueprintCallable, Category = "Review")
+    bool RegisterReviewResult(FName WordId, bool bRemembered);
+
+    UFUNCTION(BlueprintPure, Category = "Vocabulary")
+    int32 GetDiscoveredWordsCountInSet(FName SetId) const;
+
+    UFUNCTION(BlueprintPure, Category = "Vocabulary")
+    bool AreAllWordsInSetDiscovered(FName SetId) const;
+
+    TMap<FName, FWordProgress> ExportProgress() const;
+    void RestoreProgress(const TMap<FName, FWordProgress>& SavedProgress);
+
 private:
-    UPROPERTY()
-    TSet<FName> LearnedWords;
+    void NotifyProgressChanged();
 
     UPROPERTY()
     int32 TotalWordsCount = 3;

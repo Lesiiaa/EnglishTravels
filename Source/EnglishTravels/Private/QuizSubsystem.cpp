@@ -1,22 +1,53 @@
 #include "QuizSubsystem.h"
 #include "Engine/DataTable.h"
 #include "VocabularySubsystem.h"
+#include "Engine/GameInstance.h"
+#include "GameProgressSubsystem.h"
 
 void UQuizSubsystem::StartQuiz()
 {
-    Questions.Empty();
+    bQuizCompleted = false;
+    bStoryQuizPassed = false;
+    BuildQuiz(FName("Shop"), false);
+}
 
-    if (!WordTable)
+bool UQuizSubsystem::StartTrainingQuiz(FName SetId)
+{
+    return BuildQuiz(SetId, true);
+}
+
+bool UQuizSubsystem::StartTrainingQuizAllWords()
+{
+    return BuildQuiz(NAME_None, true);
+}
+
+bool UQuizSubsystem::StartTrainingQuizByCategory(FName Category)
+{
+    return BuildQuiz(NAME_None, true, Category);
+}
+
+bool UQuizSubsystem::BuildQuiz(FName SetId, bool bOnlyDiscovered, FName Category)
+{
+    Questions.Empty();
+    CurrentQuestionIndex = 0;
+    CorrectAnswersCount = 0;
+    MistakesCount = 0;
+    bCurrentQuestionHadMistake = false;
+    bTrainingMode = bOnlyDiscovered;
+
+    if (!WordTable || (SetId.IsNone() && !bOnlyDiscovered))
     {
-        CurrentQuestionIndex = 0;
-        CorrectAnswersCount = 0;
-        MistakesCount = 0;
-        bCurrentQuestionHadMistake = false;
-        bQuizCompleted = false;
-        return;
+        return false;
     }
 
-    TArray<FWordData> ShopWords;
+    TArray<FWordData> QuizWords;
+    UVocabularySubsystem* VocabularySubsystem =
+        GetGameInstance()->GetSubsystem<UVocabularySubsystem>();
+
+    if (bOnlyDiscovered && !VocabularySubsystem)
+    {
+        return false;
+    }
 
     const TArray<FName> RowNames = WordTable->GetRowNames();
 
@@ -27,15 +58,58 @@ void UQuizSubsystem::StartQuiz()
             TEXT("StartQuiz")
         );
 
-        if (Word && Word->SetId == FName("Shop"))
+        if (Word && (Word->SetId == SetId || (bOnlyDiscovered && SetId.IsNone())))
         {
-            ShopWords.Add(*Word);
+            if (!Category.IsNone() && !Word->Categories.Contains(Category))
+            {
+                continue;
+            }
+
+            if (bOnlyDiscovered)
+            {
+                if (Word->WordId.IsNone() || Word->EnglishText.IsEmpty() ||
+                    Word->PolishText.IsEmpty() ||
+                    !VocabularySubsystem->GetWordProgress(Word->WordId).bDiscovered)
+                {
+                    continue;
+                }
+
+                const bool bDuplicateAnswer = QuizWords.ContainsByPredicate(
+                    [Word](const FWordData& ExistingWord)
+                    {
+                        return ExistingWord.WordId == Word->WordId ||
+                            ExistingWord.PolishText.EqualTo(Word->PolishText);
+                    });
+
+                if (bDuplicateAnswer)
+                {
+                    continue;
+                }
+            }
+
+            QuizWords.Add(*Word);
         }
     }
 
-    for (int32 i = 0; i < ShopWords.Num(); i++)
+    if (bOnlyDiscovered && QuizWords.Num() < 3)
     {
-        const FWordData& CurrentWord = ShopWords[i];
+        return false;
+    }
+
+    if (bOnlyDiscovered)
+    {
+        //training uses up to ten random questions from the selected material
+        for (int32 ShuffleIndex = QuizWords.Num() - 1; ShuffleIndex > 0; ShuffleIndex--)
+        {
+            QuizWords.Swap(ShuffleIndex, FMath::RandRange(0, ShuffleIndex));
+        }
+    }
+
+    const int32 QuestionCount = bOnlyDiscovered ? FMath::Min(QuizWords.Num(), 10) : QuizWords.Num();
+
+    for (int32 WordIndex = 0; WordIndex < QuestionCount; WordIndex++)
+    {
+        const FWordData& CurrentWord = QuizWords[WordIndex];
 
         FQuizQuestion Question;
 
@@ -49,8 +123,8 @@ void UQuizSubsystem::StartQuiz()
         TArray<FText> Answers;
 
         Answers.Add(CurrentWord.PolishText);
-        Answers.Add(ShopWords[(i + 1) % ShopWords.Num()].PolishText);
-        Answers.Add(ShopWords[(i + 2) % ShopWords.Num()].PolishText);
+        Answers.Add(QuizWords[(WordIndex + 1) % QuizWords.Num()].PolishText);
+        Answers.Add(QuizWords[(WordIndex + 2) % QuizWords.Num()].PolishText);
 
         const FText CorrectAnswer = Answers[0];
 
@@ -80,11 +154,7 @@ void UQuizSubsystem::StartQuiz()
         Questions.Add(Question);
     }
 
-    CurrentQuestionIndex = 0;
-    CorrectAnswersCount = 0;
-    MistakesCount = 0;
-    bCurrentQuestionHadMistake = false;
-    bQuizCompleted = false;
+    return !Questions.IsEmpty();
 }
 
 FQuizQuestion UQuizSubsystem::GetCurrentQuestion() const
@@ -111,14 +181,16 @@ EQuizAnswerResult UQuizSubsystem::SubmitAnswer(int32 SelectedAnswerIndex)
 
     if (SelectedAnswerIndex == CurrentQuestion.CorrectAnswerIndex)
     {
+        if (VocabularySubsystem)
+        {
+            //a correct retry records the answer without awarding another point
+            VocabularySubsystem->RecordPracticeAnswer(
+                CurrentQuestion.WordId, true, bCurrentQuestionHadMistake ? 0 : 1);
+        }
+
         if (!bCurrentQuestionHadMistake)
         {
             CorrectAnswersCount++;
-
-            if (VocabularySubsystem)
-            {
-                VocabularySubsystem->RegisterCorrectAnswer(CurrentQuestion.WordId);
-            }
         }
 
         return EQuizAnswerResult::Correct;
@@ -129,7 +201,7 @@ EQuizAnswerResult UQuizSubsystem::SubmitAnswer(int32 SelectedAnswerIndex)
 
     if (VocabularySubsystem)
     {
-        VocabularySubsystem->RegisterMistake(CurrentQuestion.WordId);
+        VocabularySubsystem->RecordPracticeAnswer(CurrentQuestion.WordId, false, -1);
     }
 
     return EQuizAnswerResult::Incorrect;
@@ -137,12 +209,26 @@ EQuizAnswerResult UQuizSubsystem::SubmitAnswer(int32 SelectedAnswerIndex)
 
 bool UQuizSubsystem::MoveToNextQuestion()
 {
+    if (!Questions.IsValidIndex(CurrentQuestionIndex))
+    {
+        return false;
+    }
+
     CurrentQuestionIndex++;
     bCurrentQuestionHadMistake = false;
 
     if (!Questions.IsValidIndex(CurrentQuestionIndex))
     {
-        bQuizCompleted = true;
+        //only the story quiz can complete a location
+        if (!bTrainingMode)
+        {
+            bQuizCompleted = true;
+            bStoryQuizPassed = IsQuizPassed();
+            if (bStoryQuizPassed)
+            {
+                GetGameInstance()->GetSubsystem<UGameProgressSubsystem>()->MarkLocationCompleted(FName("Shop"));
+            }
+        }
         return false;
     }
 
@@ -181,15 +267,29 @@ bool UQuizSubsystem::IsQuizPassed() const
 
 bool UQuizSubsystem::HasCompletedQuiz() const
 {
-    return bQuizCompleted;
+    return bQuizCompleted ||
+        GetGameInstance()->GetSubsystem<UGameProgressSubsystem>()->IsLocationCompleted(FName("Shop"));
 }
 
 bool UQuizSubsystem::HasPassedQuiz() const
 {
-    return bQuizCompleted && IsQuizPassed();
+    return (bQuizCompleted && bStoryQuizPassed) ||
+        GetGameInstance()->GetSubsystem<UGameProgressSubsystem>()->IsLocationCompleted(FName("Shop"));
 }
 
 void UQuizSubsystem::SetWordTable(UDataTable* NewWordTable)
 {
     WordTable = NewWordTable;
+}
+
+void UQuizSubsystem::ResetSession()
+{
+    Questions.Empty();
+    CurrentQuestionIndex = 0;
+    CorrectAnswersCount = 0;
+    MistakesCount = 0;
+    bCurrentQuestionHadMistake = false;
+    bQuizCompleted = false;
+    bStoryQuizPassed = false;
+    bTrainingMode = false;
 }

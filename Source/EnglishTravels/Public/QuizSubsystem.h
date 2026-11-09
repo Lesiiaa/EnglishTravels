@@ -26,6 +26,15 @@ public:
     void StartQuiz();
 
     UFUNCTION(BlueprintCallable, Category = "Quiz")
+    bool StartTrainingQuiz(FName SetId);
+
+    UFUNCTION(BlueprintCallable, Category = "Quiz")
+    bool StartTrainingQuizAllWords();
+
+    UFUNCTION(BlueprintCallable, Category = "Quiz")
+    bool StartTrainingQuizByCategory(FName Category);
+
+    UFUNCTION(BlueprintCallable, Category = "Quiz")
     FQuizQuestion GetCurrentQuestion() const;
 
     UFUNCTION(BlueprintCallable, Category = "Quiz")
@@ -49,22 +58,25 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Quiz")
     int32 GetTotalQuestionsCount() const;
 
-    // max 1 mistake to pass
+    //allow at most one mistake to pass
     UFUNCTION(BlueprintCallable, Category = "Quiz")
     bool IsQuizPassed() const;
 
-    // player finished quiz?
     UFUNCTION(BlueprintCallable, Category = "Quiz")
     bool HasCompletedQuiz() const;
 
-    // player passed quiz?
     UFUNCTION(BlueprintCallable, Category = "Quiz")
     bool HasPassedQuiz() const;
 
     UFUNCTION(BlueprintCallable, Category = "Quiz")
     void SetWordTable(UDataTable* NewWordTable);
 
+    UFUNCTION(BlueprintCallable, Category = "Quiz")
+    void ResetSession();
+
 private:
+    bool BuildQuiz(FName SetId, bool bOnlyDiscovered, FName Category = NAME_None);
+
     UPROPERTY()
     TArray<FQuizQuestion> Questions;
 
@@ -82,6 +94,12 @@ private:
 
     UPROPERTY()
     bool bQuizCompleted = false;
+
+    UPROPERTY()
+    bool bStoryQuizPassed = false;
+
+    UPROPERTY()
+    bool bTrainingMode = false;
 
     UPROPERTY()
     UDataTable* WordTable = nullptr;
