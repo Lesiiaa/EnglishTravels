@@ -11,7 +11,8 @@ enum class EStudyActivity : uint8
 {
     Flashcards UMETA(DisplayName = "Flashcards"),
     Quiz UMETA(DisplayName = "Quiz"),
-    Memory UMETA(DisplayName = "Memory")
+    Memory UMETA(DisplayName = "Memory"),
+    Writing UMETA(DisplayName = "Writing")
 };
 
 USTRUCT(BlueprintType)

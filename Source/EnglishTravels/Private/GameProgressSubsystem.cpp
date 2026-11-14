@@ -7,6 +7,7 @@
 #include "MemorySubsystem.h"
 #include "QuizSubsystem.h"
 #include "VocabularySubsystem.h"
+#include "WritingSubsystem.h"
 
 namespace
 {
@@ -22,6 +23,7 @@ void UGameProgressSubsystem::Initialize(FSubsystemCollectionBase& Collection)
     Collection.InitializeDependency<UQuizSubsystem>();
     Collection.InitializeDependency<UFlashcardSubsystem>();
     Collection.InitializeDependency<UMemorySubsystem>();
+    Collection.InitializeDependency<UWritingSubsystem>();
     Collection.InitializeDependency<UDialogueSubsystem>();
 }
 
@@ -99,6 +101,7 @@ void UGameProgressSubsystem::ApplySave(UEnglishTravelsSaveGame* Save)
     GetGameInstance()->GetSubsystem<UQuizSubsystem>()->ResetSession();
     GetGameInstance()->GetSubsystem<UFlashcardSubsystem>()->EndSession();
     GetGameInstance()->GetSubsystem<UMemorySubsystem>()->EndSession();
+    GetGameInstance()->GetSubsystem<UWritingSubsystem>()->EndSession();
     GetGameInstance()->GetSubsystem<UDialogueSubsystem>()->EndDialogue();
     bInitialized = true;
 }
