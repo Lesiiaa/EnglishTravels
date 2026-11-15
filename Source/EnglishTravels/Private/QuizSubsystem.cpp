@@ -6,9 +6,26 @@
 
 void UQuizSubsystem::StartQuiz()
 {
-    bQuizCompleted = false;
-    bStoryQuizPassed = false;
-    BuildQuiz(FName("Shop"), false);
+    ResetSession();
+
+    UGameProgressSubsystem* ProgressSubsystem =
+        GetGameInstance()->GetSubsystem<UGameProgressSubsystem>();
+    UVocabularySubsystem* VocabularySubsystem =
+        GetGameInstance()->GetSubsystem<UVocabularySubsystem>();
+
+    if (!ProgressSubsystem->HasActiveTask() ||
+        !VocabularySubsystem->AreAllWordsInSetDiscovered(ProgressSubsystem->GetActiveLocationId()))
+    {
+        UE_LOG(LogTemp, Warning, TEXT("The story quiz requires an active task and its discovered vocabulary."));
+        return;
+    }
+
+    //keep the task identifier after completion clears the active task
+    StoryLocationId = ProgressSubsystem->GetActiveLocationId();
+    if (!BuildQuiz(StoryLocationId, false))
+    {
+        StoryLocationId = NAME_None;
+    }
 }
 
 bool UQuizSubsystem::StartTrainingQuiz(FName SetId)
@@ -65,11 +82,14 @@ bool UQuizSubsystem::BuildQuiz(FName SetId, bool bOnlyDiscovered, FName Category
                 continue;
             }
 
+            if (Word->WordId.IsNone() || Word->EnglishText.IsEmpty() || Word->PolishText.IsEmpty())
+            {
+                continue;
+            }
+
             if (bOnlyDiscovered)
             {
-                if (Word->WordId.IsNone() || Word->EnglishText.IsEmpty() ||
-                    Word->PolishText.IsEmpty() ||
-                    !VocabularySubsystem->GetWordProgress(Word->WordId).bDiscovered)
+                if (!VocabularySubsystem->GetWordProgress(Word->WordId).bDiscovered)
                 {
                     continue;
                 }
@@ -91,7 +111,7 @@ bool UQuizSubsystem::BuildQuiz(FName SetId, bool bOnlyDiscovered, FName Category
         }
     }
 
-    if (bOnlyDiscovered && QuizWords.Num() < 3)
+    if (QuizWords.Num() < 3)
     {
         return false;
     }
@@ -226,7 +246,12 @@ bool UQuizSubsystem::MoveToNextQuestion()
             bStoryQuizPassed = IsQuizPassed();
             if (bStoryQuizPassed)
             {
-                GetGameInstance()->GetSubsystem<UGameProgressSubsystem>()->MarkLocationCompleted(FName("Shop"));
+                UGameProgressSubsystem* ProgressSubsystem =
+                    GetGameInstance()->GetSubsystem<UGameProgressSubsystem>();
+                if (ProgressSubsystem->GetActiveLocationId() == StoryLocationId)
+                {
+                    ProgressSubsystem->MarkLocationCompleted(StoryLocationId);
+                }
             }
         }
         return false;
@@ -262,19 +287,21 @@ int32 UQuizSubsystem::GetTotalQuestionsCount() const
 
 bool UQuizSubsystem::IsQuizPassed() const
 {
-    return MistakesCount <= 1;
+    return !Questions.IsEmpty() && IsQuizFinished() && MistakesCount <= 1;
 }
 
 bool UQuizSubsystem::HasCompletedQuiz() const
 {
     return bQuizCompleted ||
-        GetGameInstance()->GetSubsystem<UGameProgressSubsystem>()->IsLocationCompleted(FName("Shop"));
+        (!StoryLocationId.IsNone() &&
+            GetGameInstance()->GetSubsystem<UGameProgressSubsystem>()->IsLocationCompleted(StoryLocationId));
 }
 
 bool UQuizSubsystem::HasPassedQuiz() const
 {
     return (bQuizCompleted && bStoryQuizPassed) ||
-        GetGameInstance()->GetSubsystem<UGameProgressSubsystem>()->IsLocationCompleted(FName("Shop"));
+        (!StoryLocationId.IsNone() &&
+            GetGameInstance()->GetSubsystem<UGameProgressSubsystem>()->IsLocationCompleted(StoryLocationId));
 }
 
 void UQuizSubsystem::SetWordTable(UDataTable* NewWordTable)
@@ -292,4 +319,5 @@ void UQuizSubsystem::ResetSession()
     bQuizCompleted = false;
     bStoryQuizPassed = false;
     bTrainingMode = false;
+    StoryLocationId = NAME_None;
 }

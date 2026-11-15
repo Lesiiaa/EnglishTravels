@@ -197,6 +197,12 @@ FName UGameProgressSubsystem::GetActiveLocationId() const
     return CurrentSave ? CurrentSave->ActiveLocationId : NAME_None;
 }
 
+bool UGameProgressSubsystem::HasActiveTask() const
+{
+    return CurrentSave && !CurrentSave->ActiveLocationId.IsNone() &&
+        !CurrentSave->CompletedLocations.Contains(CurrentSave->ActiveLocationId);
+}
+
 TArray<FName> UGameProgressSubsystem::GetCompletedLocations() const
 {
     return CurrentSave ? CurrentSave->CompletedLocations.Array() : TArray<FName>();

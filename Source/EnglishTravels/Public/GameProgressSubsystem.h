@@ -51,6 +51,9 @@ public:
     FName GetActiveLocationId() const;
 
     UFUNCTION(BlueprintPure, Category = "Progress")
+    bool HasActiveTask() const;
+
+    UFUNCTION(BlueprintPure, Category = "Progress")
     TArray<FName> GetCompletedLocations() const;
 
     UFUNCTION(BlueprintCallable, Category = "Progress")

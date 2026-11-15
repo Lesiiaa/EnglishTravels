@@ -103,4 +103,6 @@ private:
 
     UPROPERTY()
     UDataTable* WordTable = nullptr;
+
+    FName StoryLocationId;
 };
