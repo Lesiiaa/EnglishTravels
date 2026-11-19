@@ -248,7 +248,8 @@ bool UQuizSubsystem::MoveToNextQuestion()
             {
                 UGameProgressSubsystem* ProgressSubsystem =
                     GetGameInstance()->GetSubsystem<UGameProgressSubsystem>();
-                if (ProgressSubsystem->GetActiveLocationId() == StoryLocationId)
+                if (ProgressSubsystem &&
+                    ProgressSubsystem->GetActiveLocationId() == StoryLocationId)
                 {
                     ProgressSubsystem->MarkLocationCompleted(StoryLocationId);
                 }

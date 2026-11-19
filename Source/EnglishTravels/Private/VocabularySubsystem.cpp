@@ -336,7 +336,8 @@ bool UVocabularySubsystem::RecordPracticeAnswer(FName WordId, bool bCorrect, int
         Progress.Mistakes++;
     }
 
-    Progress.KnowledgeScore = FMath::Clamp(Progress.KnowledgeScore + ScoreChange, 0, 12);
+    Progress.KnowledgeScore = FMath::Clamp(
+        Progress.KnowledgeScore + ScoreChange, 0, 12);
     NotifyProgressChanged();
     return true;
 }
