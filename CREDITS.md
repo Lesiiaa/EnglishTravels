@@ -2,7 +2,7 @@
 
 EnglishTravels is an educational game developed as an engineering thesis project.
 
-The project uses third-party 3D models and graphical assets created by independent artists. All rights to these assets belong to their respective authors.
+The project uses third-party 3D models, graphical assets and AI-generated speech. Third-party assets remain subject to their respective rights and terms of use.
 
 ## Assets
 
@@ -82,6 +82,17 @@ The project uses third-party 3D models and graphical assets created by independe
 - **License URL:** https://creativecommons.org/publicdomain/zero/1.0/
 - **Usage:** 2D illustrations used in the Memory mini-game.
 - **Modifications:** Selected illustrations may have been resized, cropped or otherwise adapted for use in the game.
+
+### ElevenLabs (elevenlabs.io) — Vocabulary Pronunciation
+
+- **Provider:** ElevenLabs — https://elevenlabs.io/
+- **Voice:** Tarquin - Posh & English RP (British English).
+- **Source:** ElevenLabs Text to Speech / Voice Library.
+- **License:** ElevenLabs Free plan terms; non-commercial use with attribution. Not CC0 or public domain.
+- **Terms:** https://elevenlabs.io/docs/help-center/legal/can-i-publish-the-content-i-generate-on-the-platform
+- **Usage:** AI-generated English pronunciation recordings for vocabulary words and phrases.
+- **Attribution:** Vocabulary pronunciation generated with ElevenLabs (elevenlabs.io), using the voice "Tarquin - Posh & English RP".
+- **Publication requirement:** For Free plan output, ElevenLabs requires "elevenlabs.io" or "11.ai" in the title when publishing the generated content. This credits entry does not replace that requirement or grant commercial rights.
 
 ## Licenses
 

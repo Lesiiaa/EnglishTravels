@@ -5,6 +5,7 @@
 #include "WordTypes.generated.h"
 
 class UTexture2D;
+class USoundBase;
 
 UENUM(BlueprintType)
 enum class EStudyActivity : uint8
@@ -37,6 +38,9 @@ struct ENGLISHTRAVELS_API FWordData : public FTableRowBase
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Word")
     TSoftObjectPtr<UTexture2D> Image;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Word")
+    TObjectPtr<USoundBase> PronunciationSound = nullptr;
 };
 
 UENUM(BlueprintType)
