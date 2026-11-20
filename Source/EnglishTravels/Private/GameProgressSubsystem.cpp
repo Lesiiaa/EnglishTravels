@@ -146,21 +146,21 @@ bool UGameProgressSubsystem::WasLastSaveSuccessful() const
 
 bool UGameProgressSubsystem::MarkLetterOpened(FName LetterId, FName LocationId)
 {
-    if (!bInitialized || !CurrentSave || LetterId.IsNone() || LocationId.IsNone())
+    if (!bInitialized || !CurrentSave || LetterId.IsNone() ||
+        CurrentSave->OpenedLetters.Contains(LetterId))
     {
         return false;
     }
 
-    const bool bChanged = !CurrentSave->OpenedLetters.Contains(LetterId);
     CurrentSave->OpenedLetters.Add(LetterId);
 
-    if (!CurrentSave->CompletedLocations.Contains(LocationId))
+    if (!LocationId.IsNone() && !CurrentSave->CompletedLocations.Contains(LocationId))
     {
         CurrentSave->ActiveLocationId = LocationId;
     }
 
     AutoSave();
-    return bChanged;
+    return true;
 }
 
 bool UGameProgressSubsystem::IsLetterOpened(FName LetterId) const

@@ -75,6 +75,14 @@ The project uses third-party 3D models and graphical assets created by independe
 - **License:** CC BY
 - **Usage:** Cash vocabulary object.
 
+### Openclipart — 2D Illustrations
+
+- **Source:** https://openclipart.org/
+- **License:** Creative Commons Zero (CC0 1.0)
+- **License URL:** https://creativecommons.org/publicdomain/zero/1.0/
+- **Usage:** 2D illustrations used in the Memory mini-game.
+- **Modifications:** Selected illustrations may have been resized, cropped or otherwise adapted for use in the game.
+
 ## Licenses
 
 Original license files, where available, are stored in the project's `Licenses/` directory.
