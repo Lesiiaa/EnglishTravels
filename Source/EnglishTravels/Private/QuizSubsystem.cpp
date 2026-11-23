@@ -136,7 +136,7 @@ bool UQuizSubsystem::BuildQuiz(FName SetId, bool bOnlyDiscovered, FName Category
         Question.WordId = CurrentWord.WordId;
 
         Question.QuestionText = FText::Format(
-            FText::FromString(TEXT("What does \"{0}\" mean?")),
+            FText::FromString(TEXT("Co oznacza \"{0}\"?")),
             CurrentWord.EnglishText
         );
 

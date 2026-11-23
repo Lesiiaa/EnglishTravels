@@ -83,6 +83,13 @@ The project uses third-party 3D models, graphical assets and AI-generated speech
 - **Usage:** 2D illustrations used in the Memory mini-game.
 - **Modifications:** Selected illustrations may have been resized, cropped or otherwise adapted for use in the game.
 
+### UXWing — Icons
+
+- **Source:** https://uxwing.com/red-x-line-icon/, https://uxwing.com/green-checkmark-line-icon/
+- **License:** UXWing free license; commercial use allowed, attribution not required.
+- **License URL:** https://uxwing.com/license/
+- **Usage:** Correct and incorrect answer icons in the user interface.
+
 ### ElevenLabs (elevenlabs.io) — Vocabulary Pronunciation
 
 - **Provider:** ElevenLabs — https://elevenlabs.io/
