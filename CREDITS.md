@@ -82,6 +82,20 @@ The project uses third-party 3D models, graphical assets and AI-generated speech
 - **License URL:** https://creativecommons.org/publicdomain/zero/1.0/
 - **Usage:** 2D illustrations used in the Memory mini-game.
 - **Modifications:** Selected illustrations may have been resized, cropped or otherwise adapted for use in the game.
+- **Illustrations used:**
+  - https://openclipart.org/detail/241221/yellow-credit-card
+  - https://openclipart.org/detail/134791/iconmenu
+  - https://openclipart.org/detail/169282/credit-card-bill
+  - https://openclipart.org/detail/227246/cash
+  - https://openclipart.org/detail/275610/price-tag
+  - https://openclipart.org/detail/139003/price-tag
+  - https://openclipart.org/detail/241571/bottle-of-milk-with-cow
+  - https://openclipart.org/detail/193115/paper-shopping-bag
+  - https://openclipart.org/detail/124369/please
+  - https://openclipart.org/detail/334976/loaf-of-bread-2
+  - https://openclipart.org/detail/329358/glass-of-water-half
+  - https://openclipart.org/detail/190931/where
+  - https://openclipart.org/detail/334761/gift-for-dad
 
 ### UXWing — Icons
 
