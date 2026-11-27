@@ -28,16 +28,6 @@ void UQuizSubsystem::StartQuiz()
     }
 }
 
-bool UQuizSubsystem::StartTrainingQuiz(FName SetId)
-{
-    return BuildQuiz(SetId, true);
-}
-
-bool UQuizSubsystem::StartTrainingQuizAllWords()
-{
-    return BuildQuiz(NAME_None, true);
-}
-
 bool UQuizSubsystem::StartTrainingQuizByCategory(FName Category)
 {
     return BuildQuiz(NAME_None, true, Category);
@@ -276,11 +266,6 @@ int32 UQuizSubsystem::GetMistakesCount() const
     return MistakesCount;
 }
 
-int32 UQuizSubsystem::GetCurrentQuestionIndex() const
-{
-    return CurrentQuestionIndex;
-}
-
 int32 UQuizSubsystem::GetTotalQuestionsCount() const
 {
     return Questions.Num();
@@ -289,13 +274,6 @@ int32 UQuizSubsystem::GetTotalQuestionsCount() const
 bool UQuizSubsystem::IsQuizPassed() const
 {
     return !Questions.IsEmpty() && IsQuizFinished() && MistakesCount <= 1;
-}
-
-bool UQuizSubsystem::HasCompletedQuiz() const
-{
-    return bQuizCompleted ||
-        (!StoryLocationId.IsNone() &&
-            GetGameInstance()->GetSubsystem<UGameProgressSubsystem>()->IsLocationCompleted(StoryLocationId));
 }
 
 bool UQuizSubsystem::HasPassedQuiz() const

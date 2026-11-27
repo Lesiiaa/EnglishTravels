@@ -134,16 +134,6 @@ void UGameProgressSubsystem::AutoSave()
     }
 }
 
-bool UGameProgressSubsystem::IsGameInitialized() const
-{
-    return bInitialized;
-}
-
-bool UGameProgressSubsystem::WasLastSaveSuccessful() const
-{
-    return bLastSaveSuccessful;
-}
-
 bool UGameProgressSubsystem::MarkLetterOpened(FName LetterId, FName LocationId)
 {
     if (!bInitialized || !CurrentSave || LetterId.IsNone() ||
@@ -201,11 +191,6 @@ bool UGameProgressSubsystem::HasActiveTask() const
 {
     return CurrentSave && !CurrentSave->ActiveLocationId.IsNone() &&
         !CurrentSave->CompletedLocations.Contains(CurrentSave->ActiveLocationId);
-}
-
-TArray<FName> UGameProgressSubsystem::GetCompletedLocations() const
-{
-    return CurrentSave ? CurrentSave->CompletedLocations.Array() : TArray<FName>();
 }
 
 void UGameProgressSubsystem::SetNotebookNotes(const FString& Notes)

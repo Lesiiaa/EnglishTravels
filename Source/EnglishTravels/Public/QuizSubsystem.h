@@ -26,12 +26,6 @@ public:
     void StartQuiz();
 
     UFUNCTION(BlueprintCallable, Category = "Quiz")
-    bool StartTrainingQuiz(FName SetId);
-
-    UFUNCTION(BlueprintCallable, Category = "Quiz")
-    bool StartTrainingQuizAllWords();
-
-    UFUNCTION(BlueprintCallable, Category = "Quiz")
     bool StartTrainingQuizByCategory(FName Category);
 
     UFUNCTION(BlueprintCallable, Category = "Quiz")
@@ -53,17 +47,11 @@ public:
     int32 GetMistakesCount() const;
 
     UFUNCTION(BlueprintCallable, Category = "Quiz")
-    int32 GetCurrentQuestionIndex() const;
-
-    UFUNCTION(BlueprintCallable, Category = "Quiz")
     int32 GetTotalQuestionsCount() const;
 
     //allow at most one mistake to pass
     UFUNCTION(BlueprintCallable, Category = "Quiz")
     bool IsQuizPassed() const;
-
-    UFUNCTION(BlueprintCallable, Category = "Quiz")
-    bool HasCompletedQuiz() const;
 
     UFUNCTION(BlueprintCallable, Category = "Quiz")
     bool HasPassedQuiz() const;

@@ -2,15 +2,6 @@
 #include "Engine/GameInstance.h"
 #include "VocabularySubsystem.h"
 
-bool UFlashcardSubsystem::StartSession(FName SetId)
-{
-    UVocabularySubsystem* VocabularySubsystem =
-        GetGameInstance()->GetSubsystem<UVocabularySubsystem>();
-
-    return StartSessionFromWords(VocabularySubsystem
-        ? VocabularySubsystem->GetWordsBySet(SetId) : TArray<FWordData>());
-}
-
 bool UFlashcardSubsystem::StartSessionByCategory(FName Category)
 {
     UVocabularySubsystem* VocabularySubsystem =
@@ -61,11 +52,6 @@ bool UFlashcardSubsystem::StartSmartReview(int32 MaxCards)
     const bool bStarted = StartSessionFromWords(DueWords);
     bSmartReviewSession = bStarted;
     return bStarted;
-}
-
-bool UFlashcardSubsystem::IsSmartReviewSession() const
-{
-    return bSmartReviewSession;
 }
 
 void UFlashcardSubsystem::EndSession()
@@ -133,11 +119,6 @@ bool UFlashcardSubsystem::SubmitAnswer(bool bRemembered)
     CurrentCardIndex++;
     bCurrentCardRevealed = false;
     return true;
-}
-
-bool UFlashcardSubsystem::IsCurrentCardRevealed() const
-{
-    return Cards.IsValidIndex(CurrentCardIndex) && bCurrentCardRevealed;
 }
 
 bool UFlashcardSubsystem::IsSessionFinished() const

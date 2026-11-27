@@ -25,34 +25,6 @@ bool UVocabularySubsystem::IsWordLearned(FName WordId) const
     return Progress && Progress->bDiscovered;
 }
 
-int32 UVocabularySubsystem::GetLearnedWordsCount() const
-{
-    int32 Count = 0;
-    for (const TPair<FName, FWordProgress>& Entry : WordProgress)
-    {
-        if (Entry.Value.bDiscovered)
-        {
-            Count++;
-        }
-    }
-    return Count;
-}
-
-int32 UVocabularySubsystem::GetTotalWordsCount() const
-{
-    return TotalWordsCount;
-}
-
-bool UVocabularySubsystem::AreAllWordsLearned() const
-{
-    return TotalWordsCount > 0 && GetLearnedWordsCount() >= TotalWordsCount;
-}
-
-void UVocabularySubsystem::SetTotalWordsCount(int32 NewTotalWordsCount)
-{
-    TotalWordsCount = FMath::Max(0, NewTotalWordsCount);
-}
-
 void UVocabularySubsystem::SetWordTable(UDataTable* NewWordTable)
 {
     WordTable = NewWordTable;
@@ -215,30 +187,6 @@ void UVocabularySubsystem::MarkWordAsDiscovered(FName WordId)
     NotifyProgressChanged();
 }
 
-void UVocabularySubsystem::RegisterCorrectAnswer(FName WordId)
-{
-    if (WordId.IsNone())
-    {
-        return;
-    }
-
-    FWordProgress& Progress = WordProgress.FindOrAdd(WordId);
-    Progress.CorrectAnswers++;
-    NotifyProgressChanged();
-}
-
-void UVocabularySubsystem::RegisterMistake(FName WordId)
-{
-    if (WordId.IsNone())
-    {
-        return;
-    }
-
-    FWordProgress& Progress = WordProgress.FindOrAdd(WordId);
-    Progress.Mistakes++;
-    NotifyProgressChanged();
-}
-
 FWordProgress UVocabularySubsystem::GetWordProgress(FName WordId) const
 {
     if (const FWordProgress* Progress = WordProgress.Find(WordId))
@@ -247,23 +195,6 @@ FWordProgress UVocabularySubsystem::GetWordProgress(FName WordId) const
     }
 
     return FWordProgress();
-}
-
-void UVocabularySubsystem::AddKnowledgeScore(FName WordId, int32 Amount)
-{
-    if (WordId.IsNone())
-    {
-        return;
-    }
-
-    FWordProgress& Progress = WordProgress.FindOrAdd(WordId);
-
-    Progress.KnowledgeScore = FMath::Clamp(
-        Progress.KnowledgeScore + Amount,
-        0,
-        12
-    );
-    NotifyProgressChanged();
 }
 
 EWordKnowledgeLevel UVocabularySubsystem::GetKnowledgeLevel(FName WordId) const
@@ -298,18 +229,6 @@ EWordKnowledgeLevel UVocabularySubsystem::GetKnowledgeLevel(FName WordId) const
     }
 
     return EWordKnowledgeLevel::Mastered;
-}
-
-float UVocabularySubsystem::GetKnowledgePercent(FName WordId) const
-{
-    const FWordProgress* Progress = WordProgress.Find(WordId);
-
-    if (!Progress)
-    {
-        return 0.0f;
-    }
-
-    return static_cast<float>(Progress->KnowledgeScore) / 12.0f;
 }
 
 bool UVocabularySubsystem::RecordPracticeAnswer(FName WordId, bool bCorrect, int32 ScoreChange)
@@ -383,11 +302,6 @@ TArray<FWordData> UVocabularySubsystem::GetDueReviewWords(int32 MaxWords) const
     }
 
     return Result;
-}
-
-int32 UVocabularySubsystem::GetDueReviewCount() const
-{
-    return GetDueReviewWords().Num();
 }
 
 bool UVocabularySubsystem::RegisterReviewResult(FName WordId, bool bRemembered)

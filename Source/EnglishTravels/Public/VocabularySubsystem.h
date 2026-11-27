@@ -20,18 +20,6 @@ public:
     bool IsWordLearned(FName WordId) const;
 
     UFUNCTION(BlueprintCallable, Category = "Vocabulary")
-    int32 GetLearnedWordsCount() const;
-
-    UFUNCTION(BlueprintCallable, Category = "Vocabulary")
-    int32 GetTotalWordsCount() const;
-
-    UFUNCTION(BlueprintCallable, Category = "Vocabulary")
-    bool AreAllWordsLearned() const;
-
-    UFUNCTION(BlueprintCallable, Category = "Vocabulary")
-    void SetTotalWordsCount(int32 NewTotalWordsCount);
-
-    UFUNCTION(BlueprintCallable, Category = "Vocabulary")
     void SetWordTable(UDataTable* NewWordTable);
 
     UFUNCTION(BlueprintCallable, Category = "Vocabulary")
@@ -53,31 +41,16 @@ public:
     void MarkWordAsDiscovered(FName WordId);
 
     UFUNCTION(BlueprintCallable, Category = "Vocabulary")
-    void RegisterCorrectAnswer(FName WordId);
-
-    UFUNCTION(BlueprintCallable, Category = "Vocabulary")
-    void RegisterMistake(FName WordId);
-
-    UFUNCTION(BlueprintCallable, Category = "Vocabulary")
     FWordProgress GetWordProgress(FName WordId) const;
 
     UFUNCTION(BlueprintCallable, Category = "Vocabulary")
-    void AddKnowledgeScore(FName WordId, int32 Amount);
-
-    UFUNCTION(BlueprintCallable, Category = "Vocabulary")
     EWordKnowledgeLevel GetKnowledgeLevel(FName WordId) const;
-
-    UFUNCTION(BlueprintCallable, Category = "Vocabulary")
-    float GetKnowledgePercent(FName WordId) const;
 
     UFUNCTION(BlueprintCallable, Category = "Vocabulary")
     bool RecordPracticeAnswer(FName WordId, bool bCorrect, int32 ScoreChange);
 
     UFUNCTION(BlueprintPure, Category = "Review")
     TArray<FWordData> GetDueReviewWords(int32 MaxWords = 0) const;
-
-    UFUNCTION(BlueprintPure, Category = "Review")
-    int32 GetDueReviewCount() const;
 
     UFUNCTION(BlueprintCallable, Category = "Review")
     bool RegisterReviewResult(FName WordId, bool bRemembered);
@@ -93,9 +66,6 @@ public:
 
 private:
     void NotifyProgressChanged();
-
-    UPROPERTY()
-    int32 TotalWordsCount = 3;
 
     UPROPERTY()
     UDataTable* WordTable = nullptr;

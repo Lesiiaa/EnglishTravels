@@ -29,12 +29,6 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Save")
     bool SaveProgress();
 
-    UFUNCTION(BlueprintPure, Category = "Save")
-    bool IsGameInitialized() const;
-
-    UFUNCTION(BlueprintPure, Category = "Save")
-    bool WasLastSaveSuccessful() const;
-
     UFUNCTION(BlueprintCallable, Category = "Progress")
     bool MarkLetterOpened(FName LetterId, FName LocationId);
 
@@ -52,9 +46,6 @@ public:
 
     UFUNCTION(BlueprintPure, Category = "Progress")
     bool HasActiveTask() const;
-
-    UFUNCTION(BlueprintPure, Category = "Progress")
-    TArray<FName> GetCompletedLocations() const;
 
     UFUNCTION(BlueprintCallable, Category = "Progress")
     void SetNotebookNotes(const FString& Notes);

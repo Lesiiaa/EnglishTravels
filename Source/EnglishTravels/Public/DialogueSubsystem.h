@@ -25,9 +25,6 @@ public:
     FDialogueLine GetCurrentLine() const;
 
     UFUNCTION(BlueprintCallable, Category = "Dialogue")
-    bool IsDialogueActive() const;
-
-    UFUNCTION(BlueprintCallable, Category = "Dialogue")
     void EndDialogue();
 
 private:

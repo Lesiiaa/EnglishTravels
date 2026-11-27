@@ -84,8 +84,3 @@ FDialogueLine UDialogueSubsystem::GetCurrentLine() const
 
     return *CurrentLine;
 }
-
-bool UDialogueSubsystem::IsDialogueActive() const
-{
-    return bDialogueActive;
-}

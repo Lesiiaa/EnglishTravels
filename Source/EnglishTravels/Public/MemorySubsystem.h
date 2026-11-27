@@ -13,9 +13,6 @@ class ENGLISHTRAVELS_API UMemorySubsystem : public UGameInstanceSubsystem
 
 public:
     UFUNCTION(BlueprintCallable, Category = "Memory")
-    bool StartSession(int32 MaxPairs = 10);
-
-    UFUNCTION(BlueprintCallable, Category = "Memory")
     bool StartSessionByCategory(FName Category, int32 MaxPairs = 10);
 
     UFUNCTION(BlueprintCallable, Category = "Memory")

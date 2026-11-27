@@ -12,16 +12,10 @@ class ENGLISHTRAVELS_API UFlashcardSubsystem : public UGameInstanceSubsystem
 
 public:
     UFUNCTION(BlueprintCallable, Category = "Flashcards")
-    bool StartSession(FName SetId);
-
-    UFUNCTION(BlueprintCallable, Category = "Flashcards")
     bool StartSessionByCategory(FName Category);
 
     UFUNCTION(BlueprintCallable, Category = "Flashcards|Review")
     bool StartSmartReview(int32 MaxCards = 10);
-
-    UFUNCTION(BlueprintPure, Category = "Flashcards|Review")
-    bool IsSmartReviewSession() const;
 
     UFUNCTION(BlueprintCallable, Category = "Flashcards")
     void EndSession();
@@ -34,9 +28,6 @@ public:
 
     UFUNCTION(BlueprintCallable, Category = "Flashcards")
     bool SubmitAnswer(bool bRemembered);
-
-    UFUNCTION(BlueprintPure, Category = "Flashcards")
-    bool IsCurrentCardRevealed() const;
 
     UFUNCTION(BlueprintPure, Category = "Flashcards")
     bool IsSessionFinished() const;

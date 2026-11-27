@@ -2,15 +2,6 @@
 #include "Engine/GameInstance.h"
 #include "VocabularySubsystem.h"
 
-bool UMemorySubsystem::StartSession(int32 MaxPairs)
-{
-    UVocabularySubsystem* VocabularySubsystem =
-        GetGameInstance()->GetSubsystem<UVocabularySubsystem>();
-
-    return StartSessionFromWords(VocabularySubsystem
-        ? VocabularySubsystem->GetDiscoveredWords() : TArray<FWordData>(), MaxPairs);
-}
-
 bool UMemorySubsystem::StartSessionByCategory(FName Category, int32 MaxPairs)
 {
     UVocabularySubsystem* VocabularySubsystem =
