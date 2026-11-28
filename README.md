@@ -1,17 +1,3 @@
-## Table of Contents :scroll:
-
-- [Project Overview](#project-overview-rocket)
-- [Features](#features-fire)
-- [Controls](#controls-video_game)
-- [Technologies](#technologies-wrench)
-- [Gameplay Preview](#gameplay-preview-desktop_computer)
-- [Installation](#installation-magic_wand)
-- [Documentation](#documentation-bookmark_tabs)
-- [Credits & Resources](#credits--resources-books)
-- [Assets](#assets-paperclip)
-
----
-
 ## Project Overview :rocket:
 
 English Travels was created as my **engineering thesis project** at DSW Ideis.  
@@ -24,6 +10,25 @@ Later, the words can be practised in a **notebook** with flashcards and mini-gam
 The game interface and translations are in Polish.
 
 The project was developed in **Unreal Engine 5 using C++ and Blueprints**.
+
+![Unreal Engine](https://img.shields.io/badge/Unreal_Engine-5.7-0e1128?logo=unrealengine&logoColor=white)
+![C++ and Blueprints](https://img.shields.io/badge/C++_%26_Blueprints-00599C?logo=cplusplus&logoColor=white)
+![Platform](https://img.shields.io/badge/Platform-Windows-0078D6?logo=windows&logoColor=white)
+![Latest build](https://img.shields.io/badge/Latest_build-v1.0.0-brightgreen)
+
+---
+
+## Table of Contents :scroll:
+
+- [Project Overview](#project-overview-rocket)
+- [Features](#features-fire)
+- [Controls](#controls-video_game)
+- [Technologies](#technologies-wrench)
+- [Gameplay Preview](#gameplay-preview-desktop_computer)
+- [Installation](#installation-magic_wand)
+- [Documentation](#documentation-bookmark_tabs)
+- [Credits & Resources](#credits--resources-books)
+- [Assets](#assets-paperclip)
 
 ---
 
