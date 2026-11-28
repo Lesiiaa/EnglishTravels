@@ -101,7 +101,6 @@ The project was developed in **Unreal Engine 5 using C++ and Blueprints**.
 ### Playing the game
 
 The game runs on **Windows 11 (64-bit)**.  
-It was tested on: Intel Core i5-9600K, NVIDIA GeForce RTX 2060 (6 GB), 16 GB RAM, 2560×1440.
 
 1. Download the game from [**GitHub Releases**](https://github.com/Lesiiaa/EnglishTravels/releases)
 2. Extract the downloaded ZIP archive
