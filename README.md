@@ -70,23 +70,24 @@ The project was developed in **Unreal Engine 5 using C++ and Blueprints**.
 
 ### Hub
 
-<img src="" width="500" />
+<img src="Docs/media/hub.png" width="500" />
 
 ### Dialogues
 
-<img src="" width="500" />
+<img src="Docs/media/npc_dialogue.gif" width="500" />
 
 ### Interactable items
 
-<img src="" width="500" />
+<img src="Docs/media/interactable_item.gif" width="500" />
 
 ### Notebook
 
-<img src="" width="500" />
+<img src="Docs/media/notebook_options.gif" width="500" />
 
 ### Mini-games
 
-<img src="" width="500" />
+<img src="Docs/media/quiz.gif" width="500" />
+<img src="Docs/media/memory.gif" width="500" />
 
 ---
 
