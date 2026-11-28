@@ -112,7 +112,7 @@ The progress is saved automatically in `%LOCALAPPDATA%\EnglishTravels\Saved\Save
 Here you can find documents that describe the game concept and development process.
 
 - **Game Design Document (GDD)** (only pl)
-  [View GDD]()
+  [View GDD](Docs/EnglishTravelsGDD.pdf)
 - **Asset credits and licenses**
   [View credits](CREDITS.md)
 
